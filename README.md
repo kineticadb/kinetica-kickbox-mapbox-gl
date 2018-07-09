@@ -24,7 +24,7 @@ While Mapbox is fully interoperable with Kinetica natively, the workflow for dis
 
 ### Installing Kickbox in Your Project
 
-If you're using NPM, add this line to your package manager:
+Add this line to your package.json file:
 
 ```
   "dependencies": {
@@ -35,15 +35,9 @@ If you're using NPM, add this line to your package manager:
 
 Then run `npm install`.
 
-Or from your CLI, simply run:
-
-```
-npm install --save kinetica-kickbox-mapbox-gl
-```
-
 Once it's in your node_modules folder, you can either reference the `node_modules/kinetica-kickbox/dist/kickbox.js` directly from your index.html, or use something like `var kickbox = require('kinetica-kickbox');` in your JavaScript framework.
 
-If you're not using a package manager, you can grab a copy of Kinetica Kickbox.js from our GitHub page here: http://github.com/kinetica/kickboxjs. TODO: Put real link here
+You can also grab a copy of Kinetica Kickbox.js from our GitHub page here: [https://github.com/kineticadb/kinetica-kickbox-mapbox-gl](https://github.com/kineticadb/kinetica-kickbox-mapbox-gl)
 
 ## Getting Started
 
