@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <title>Kinetica Kickbox: Point Cluster Example</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+        <!-- Include Mapbox stylesheet -->
+        <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css" rel="stylesheet" />
+
+        <!-- Include Kickbox CSS -->
+        <link rel="stylesheet" href="../dist/kickbox.css" />
+
+        <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
+        <script src="./config.js"></script>
+
+        <!-- Basic styling for the map -->
+        <style>
+            body { margin:0; padding:0;}
+            #map { position:absolute; top:0; bottom:0; width:100%; transition: all 0.3s; }
+        </style>
+    </head>
+        <body>
+        <div class="kickbox toolbox">
+            <div class="text-center">
+                <img class="kickbox-logo" src="images/kickbox-logo-white.png" />
+            </div>
+            <div class="powered-by">
+                Powered by<br/>
+                <img class="kinetica" src="images/kinetica-logo-white.png" />
+                <div class="divider"></div>
+                <div class="mapbox-logo"></div>
+            </div>
+        </div>
+        <div id='map'></div>
+        <!-- Include Mapbox and Kickbox -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js"></script>
+    <script src="../dist/kickbox.min.js"></script>
+
+    <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
+    <script src="./config.js"></script>
+
+    <!-- For demo purposes only. Include jQuery for binding form events to rendering -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        (function(mapboxgl, kbConfig) {
+
+            // Initialize the map
+            var layerId = kbConfig.tableName + '-cluster';
+
+            kickbox.initMap({
+                zoom: 3,
+                mapDiv: 'map',
+                mapboxgl: mapboxgl,
+                mapboxKey: kbConfig.mapboxKey,
+                wmsUrl: kbConfig.wmsUrl,
+                kineticaUrl: kbConfig.kineticaUrl,
+                // If using basic authentication
+                // username: kbConfig.username,
+                // password: kbConfig.password
+            }).then(function(map) {
+
+                // Add a raster layer to the map
+                kickbox.addClusterLayer(map, {
+                    clusterRadius: 40,
+                    clusteringPrecision: 10,
+                    clusterMaxZoom: 24,
+                    useBbox: false,
+                    precision: 9,
+                    tableName: kbConfig.tableName,
+                    layerId: layerId,
+                    mapboxgl: mapboxgl,
+                    geohashAttr: kbConfig.geohashColumnName,
+                    kineticaUrl: kbConfig.kineticaUrl,
+                    xAttr: kbConfig.xColumnName,
+                    yAttr: kbConfig.yColumnName
+                });
+            });
+
+        })(window.mapboxgl, window.kbConfig);
+    </script>
+    </body>
+</html>

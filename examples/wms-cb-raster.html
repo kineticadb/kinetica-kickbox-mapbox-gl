@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Kinetica Kickbox: WMS Class Break Raster Example</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- Include Mapbox stylesheet -->
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css" rel="stylesheet" />
+
+    <!-- Include Kickbox CSS -->
+    <link rel="stylesheet" href='../dev-dist/kickbox.css' />
+
+    <!-- Generic styles for Mapbox web map -->
+    <style>
+        body { margin:0; padding:0;}
+        #map { position:absolute; top:0; bottom:0; width:100%; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="kickbox toolbox">
+        <div class="text-center">
+            <img class="kickbox-logo" src="images/kickbox-logo-white.png" />
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-sm btn-primary form-control" id="fit-to-extent">Fit to Extent</button>
+        </div>
+
+        <div class="powered-by">
+            Powered by<br/>
+            <img class="kinetica" src="images/kinetica-logo-white.png" />
+            <div class="divider"></div>
+            <div class="mapbox-logo"></div>
+        </div>
+    </div>
+
+    <!-- Include a map div -->
+    <div id='map'></div>
+
+    <!-- Include mapbox and kickbox library -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js"></script>
+    <script src="../dev-dist/kickbox.min.js"></script>
+
+    <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
+    <script src="./config.js"></script>
+
+    <!-- jQuery only used to bind form events for this demo -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        (function(mapboxgl, kbConfig) {
+
+            // Initialize the web map
+            var layerId = kbConfig.tableName + '-raster';
+
+            kickbox.initMap({
+                mapDiv: 'map',
+                mapboxgl: mapboxgl,
+                mapboxKey: kbConfig.mapboxKey,
+                wmsUrl: kbConfig.wmsUrl,
+                kineticaUrl: kbConfig.kineticaUrl,
+                // If using basic auth
+                // username: kbConfig.username,
+                // password: kbConfig.password
+            }).then(function(map) {
+
+                // Configure the class breaks
+                var legendTitle = 'your_legend_title_here';
+                var location = 'top-right';
+                var cbConfig = {
+                    cbAttr: 'your_cb_column_name_here',
+                    cbVals: [
+                        // Your class breaks here
+                        // e.g. '0:1', '1:2'...
+                    ],
+                    pointColors: [
+                        // Your point colors here
+                        // e.g. 'FFFFFF', 'FF0000'...
+                    ],
+                    pointSizes: [
+                        // Your point sizes here
+                        // e.g. '2', '2'...
+                    ],
+                    pointShapes: [
+                        // Your point shapes here
+                        // e.g. 'circle', 'circle'...
+                    ]
+                };
+
+                // Add a raster layer to the map
+                kickbox.addWmsLayer(map, {
+                    layerType: 'cb_raster',
+                    layerId: layerId,
+                    wmsUrl: kbConfig.wmsUrl,
+                    tableName: kbConfig.tableName,
+                    xAttr: kbConfig.xColumnName,
+                    yAttr: kbConfig.yColumnName,
+                    // or if using WKT
+                    // geoAttr: wktColumnName,
+                    renderingOptions: {
+                        CB_ATTR: cbConfig.cbAttr,
+                        CB_VALS: cbConfig.cbVals.join(','),
+                        POINTCOLORS: cbConfig.pointColors.join(','),
+                        POINTSIZES: cbConfig.pointSizes.join(','),
+                        POINTSHAPES: cbConfig.pointShapes.join(',')
+                    },
+                });
+
+                // Add a legend for the class break
+                kickbox.addCbLegend(map, legendTitle, location, cbConfig);
+
+                // Bind UI events to map rendering
+                $(document).ready(function() {
+                    map.on('load', function() {
+
+                    $('#fit-to-extent').on('click', function() {
+                        kickbox.zoomToBounds(map, {
+                            kineticaUrl: kbConfig.kineticaUrl,
+                            tableName: kbConfig.tableName,
+                            xAttr: kbConfig.xColumnName,
+                            yAttr: kbConfig.yColumnName
+                            // Or if using WKT column
+                            // geoAttr: kbConfig.wktColumnName
+                            });
+                        });
+                    });
+                });
+            });
+
+        })(window.mapboxgl, window.kbConfig);
+    </script>
+    </body>
+</html>

@@ -1,0 +1,6 @@
+/examples/ignore/*
+/dev-dist/*
+/node_modules/*
+.DS_STORE
+.vscode/*
+test-output/*

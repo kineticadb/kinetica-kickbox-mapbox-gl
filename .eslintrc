@@ -1,0 +1,12 @@
+{
+    "extends": "standard",
+    "globals": {
+        "btoa": true
+    },
+    "rules": {
+        "no-debugger": "off",
+        "spaced-comment": ["error", "always", { "exceptions": ["//"] }],
+        "semi": "off",
+        "space-before-function-paren": "off"
+    }
+}

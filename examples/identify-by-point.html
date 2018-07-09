@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Kinetica Kickbox: Identify by Point Example</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <!-- Include Mapbox stylesheet -->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
+
+
+    <!-- Include Kickbox CSS -->
+    <link rel="stylesheet" href='../dist/kickbox.css' />
+
+    <!-- Generic styles for Mapbox map -->
+    <style>
+        body { margin:0; padding:0;}
+        #map { position:absolute; top:0; bottom:0; width:100%; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="kickbox toolbox">
+        <div class="text-center">
+            <img class="kickbox-logo" src="images/kickbox-logo-white.png" />
+        </div>
+
+        <label>
+            <input id="identify-by-point" type="checkbox" />
+            Enable Identify By Point Mode
+        </label>
+
+        <div class="powered-by">
+            Powered by<br/>
+            <img class="kinetica" src="images/kinetica-logo-white.png" />
+            <div class="divider"></div>
+            <div class="mapbox-logo"></div>
+        </div>
+    </div>
+
+    <!-- Include a map div -->
+    <div id="map"></div>
+
+    <!-- Include mapbox and kickbox library -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.js"></script>
+    <script src="../dist/kickbox.min.js"></script>
+
+    <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
+    <script src="./config.js"></script>
+
+    <!-- jQuery only used to bind form events for this demo -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        (function(mapboxgl, kbConfig, MapboxDraw) {
+
+            // Initialize the map
+            var layerId = kbConfig.tableName + '-raster';
+
+            kickbox.initMap({
+                mapDiv: 'map',
+                mapboxgl: mapboxgl,
+                center: kbConfig.center,
+                zoom: kbConfig.zoom,
+                mapboxKey: kbConfig.mapboxKey,
+                kineticaUrl: kbConfig.kineticaUrl,
+                wmsUrl: kbConfig.wmsUrl,
+                // If your instance is secured with basic auth
+                username: kbConfig.username,
+                password: kbConfig.password
+            }).then(function(map) {
+
+                // Add a raster layer to the map
+                kickbox.addWmsLayer(map, {
+                    layerType: 'raster',
+                    layerId: layerId,
+                    wmsUrl: kbConfig.wmsUrl,
+                    tableName: kbConfig.tableName,
+                    xAttr: kbConfig.xColumnName,
+                    yAttr: kbConfig.yColumnName,
+                    // or if using WKT
+                    // geoAttr: wktColumnName,
+                    renderingOptions: {
+                        POINTCOLORS: '00FF00',
+                        POINTSIZES: 3
+                    },
+                });
+
+                // Setup identify properties
+                var identifyOptions = {
+                    mapboxgl: mapboxgl,
+                    MapboxDraw: MapboxDraw,
+                    radiusInMeters: 500, // Set the hard-coded radius in meters here
+                    kineticaUrl: kbConfig.kineticaUrl,
+                    tableName: kbConfig.tableName,
+                    layerId: kbConfig.tableName + '-raster',
+                    xAttr: kbConfig.xColumnName,
+                    yAttr: kbConfig.yColumnName
+                }
+
+                // For this demo only. Not needed unless you are binding identify
+                // mode to the state of a checkbox.
+                $('#identify-by-point').on('change', function() {
+                    if ($(this).is(':checked')) {
+                        // Enable identify by point mode
+                        kickbox.enableIdentifyByPointMode(map, identifyOptions);
+                    } else {
+                        kickbox.disableIdentifyByPointMode(map, identifyOptions.layerId);
+                    }
+                });
+            });
+        })(window.mapboxgl, window.kbConfig, window.MapboxDraw);
+    </script>
+</body>
+</html>

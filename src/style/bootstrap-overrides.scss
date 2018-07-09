@@ -1,0 +1,23 @@
+.kickbox {
+
+  //////////////////////////////
+  // Bootstrap Overrides
+  //////////////////////////////
+
+  .btn {
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #735b88;
+    border-color: #735b88;
+  }
+
+  .btn-primary, .btn-primary:active,
+  .btn-primary:focus {
+    background-color: #584469;
+    border-color: #584469;
+    outline: none;
+    color: #FFF;
+  }
+}

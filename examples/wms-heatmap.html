@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Kinetica Kickbox: WMS Heatmap Example</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <!-- Include Mapbox stylesheet -->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Include Kickbox CSS -->
+    <link rel="stylesheet" href='../dist/kickbox.css' />
+
+    <!-- Generic styles for Mapbox map -->
+    <style>
+        body { margin:0; padding:0;}
+        #map { position:absolute; top:0; bottom:0; width:100%; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="kickbox toolbox">
+        <div class="text-center">
+            <img class="kickbox-logo" src="images/kickbox-logo-white.png" />
+        </div>
+
+        <div class="form-group">
+            <label>Color Map</label>
+            <select id="color-map-picker" class="form-control">
+                <option value="jet" selected>Jet</option>
+                <option value="inferno">Inferno</option>
+                <option value="bone">Bone</option>
+                <option value="BrBG">BrBG</option>
+                <option value="Accent">Accent</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Blur Radius</label>
+            <input class="form-control" type="range" id="blur-radius-picker" value="5" min="1" max="20" />
+        </div>
+
+        <div class="powered-by">
+            Powered by<br/>
+            <img class="kinetica" src="images/kinetica-logo-white.png" />
+            <div class="divider"></div>
+            <div class="mapbox-logo"></div>
+        </div>
+    </div>
+    <!-- Include a map div -->
+    <div id='map'></div>
+
+    <!-- Include mapbox and kickbox library -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js"></script>
+    <script src="../dist/kickbox.min.js"></script>
+
+    <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
+    <script src="./config.js"></script>
+
+    <!-- jQuery only used to bind form events for this demo -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>
+        (function(mapboxgl, kbConfig) {
+
+            // Initialize the web map
+            var layerId = kbConfig.tableName + '-raster';
+
+            kickbox.initMap({
+                mapDiv: 'map',
+                mapboxgl: mapboxgl,
+                mapboxKey: kbConfig.mapboxKey,
+                wmsUrl: kbConfig.wmsUrl,
+                kineticaUrl: kbConfig.kineticaUrl,
+                // If using basic auth
+                // username: kbConfig.username,
+                // password: kbConfig.password
+            }).then(function(map) {
+
+                // Add a raster layer to the map
+                kickbox.addWmsLayer(map, {
+                    layerType: 'heatmap',
+                    layerId: layerId,
+                    wmsUrl: kbConfig.wmsUrl,
+                    tableName: kbConfig.tableName,
+                    xAttr: kbConfig.xColumnName,
+                    yAttr: kbConfig.yColumnName,
+                    // or if using WKT
+                    // geoAttr: kbConfig.wktColumnName,
+                    renderingOptions: {
+                        COLORMAP: 'jet'
+                    },
+                });
+
+                // For this demo only. Not needed unless you are binding
+                // heatmap rendering properties to the state of form inputs.
+                $(document).ready(function() {
+                    map.on('load', function() {
+
+                        // Allow color selection
+                        $('#color-map-picker').change(function(e) {
+                            kickbox.updateWmsLayer(map, {
+                                wmsUrl: kbConfig.wmsUrl,
+                                layerId,
+                                renderingOptions: {COLORMAP: e.target.value}
+                            });
+                        });
+
+                        // Allow point size selection
+                        $('#blur-radius-picker').change(function(e) {
+                            kickbox.updateWmsLayer(map, {
+                                wmsUrl: kbConfig.wmsUrl,
+                                layerId,
+                                renderingOptions: {BLUR_RADIUS: e.target.value}
+                            });
+                        });
+                    });
+                });
+            });
+
+        })(window.mapboxgl, window.kbConfig);
+    </script>
+</body>
+</html>
