@@ -20,7 +20,7 @@ Specifically, this library provides common helper functions that make it easier 
 
 While Mapbox is fully interoperable with Kinetica natively, the workflow for displaying Kinetica's WMS layers can be tricky to implement without knowing the best practices regarding their integration. Furthermore, there are common patterns that begin to emerge and this library aims to reduce the amount of code required to simply connect Kinetica's WMS output to Mapbox.
 
-## Getting Started
+## Installation
 
 ### Installing Kickbox in Your Project
 
