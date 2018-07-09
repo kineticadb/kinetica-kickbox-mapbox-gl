@@ -35,7 +35,7 @@ Add this line to your package.json file:
 
 Then run `npm install`.
 
-Once it's in your node_modules folder, you can either reference the `node_modules/kinetica-kickbox/dist/kickbox.js` directly from your index.html, or use something like `var kickbox = require('kinetica-kickbox');` in your JavaScript framework.
+Once it's in your node_modules folder, you can either reference the `node_modules/kinetica-kickbox-mapbox-gl/dist/kickbox.min.js` directly from your index.html, or use something like `var kickbox = require('kinetica-kickbox-mapbox-gl');` in your JavaScript framework.
 
 You can also grab a copy of Kinetica Kickbox.js from our GitHub page here: [https://github.com/kineticadb/kinetica-kickbox-mapbox-gl](https://github.com/kineticadb/kinetica-kickbox-mapbox-gl)
 
