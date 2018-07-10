@@ -75,6 +75,7 @@ function mockMap(options) {
   map.addSource = (id, def) => {
     let src = {};
     src.id = id;
+    src.load = () => {};
     lodash.merge(src, def);
     map.sources.push(src);
   };

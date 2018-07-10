@@ -19,14 +19,14 @@ In this example, we're using the power of Kinetica to aggregate millions of reco
 First, ensure Kinetica Kickbox.js and its styles are included in your page. If you're using npm to install kickbox, reference the JS near the closing `</body>` tag like so:
 
 ```html
-<script src="/node_modules/kinetica-kickbox-js/dist/kinetica-kickbox-js.min.js"></script>
+<script src="/node_modules/kinetica-kickbox-mapbox-gl/dist/kinetica-kickbox-mapbox-gl.min.js"></script>
 ```
 
 And the stylesheet should be loaded in the `<head>` tag like so:
 
 ```html
 ...
-<link rel="stylesheet" href="/node_modules/kinetica-kickbox-js/dist/kinetica-kickbox-js.min.css" />
+<link rel="stylesheet" href="/node_modules/kinetica-kickbox-mapbox-gl/dist/kinetica-kickbox-mapbox-gl.min.css" />
 ```
 
 You will have to initialize your map before you can add a Kinetica WMS layer to it. Map initialization in Kinetica Kickbox.js is promisified so that you can ensure initialization is fully complete before your layers are added, thus avoiding startup errors. Because this initialization function sets up basic auth for Kinetica and connects to the Mapbox API all at once, it is intended to replace the existing map initialization function provided by Mapbox.

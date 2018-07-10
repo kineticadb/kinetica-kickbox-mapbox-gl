@@ -15,13 +15,13 @@ For a fully-working example, fire-up a browser and one of the following example 
 First, ensure Kinetica Kickbox.js and its stylesheet are included in your page. If you're using npm to install kickbox, reference the JavaScript near the closing `</body>` tag like so:
 
 ```html
-<script src="/node_modules/kinetica-kickbox-js/dist/kinetica-kickbox-js.min.js"></script>
+<script src="/node_moduleskinetica-kickbox-mapbox-gl/dist/kinetica-kickbox-mapbox-gl.min.js"></script>
 ```
 
 And the css should be referenced in the `<head>` of your html like so:
 
 ```html
-<link rel="stylesheet" href="/node_modules/kinetica-kickbox-js/dist/kinetica-kickbox-js.min.css" />
+<link rel="stylesheet" href="/node_modules/kinetica-kickbox-mapbox-gl/dist/kinetica-kickbox-mapbox-gl.min.css" />
 ```
 
 You will have to initialize your map before you can add a Kinetica WMS layer to it. Map initialization in Kinetica Kickbox.js is promisified so that you can ensure initialization is fully complete before your layers are added, thus avoiding startup errors. Because this initialization function sets up basic auth for Kinetica and connects to the Mapbox API all at once, it is intended to replace the existing map initialization function provided by Mapbox.

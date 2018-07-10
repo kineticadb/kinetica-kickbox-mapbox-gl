@@ -1,7 +1,7 @@
-# Kinetica Kickbox.js
+# Kinetica Kickbox.js Mapbox GL
 
 ## Library Overview
-Kinetica Kickbox.js is a set of client-side code-acellerator libraries aimed at getting you up and running with Kinetica and Mapbox GL as quickly as possible.
+Kinetica Kickbox.js is a client-side code-acellerator library aimed at getting you up and running with Kinetica and Mapbox GL as quickly as possible.
 
 ## Features
 
@@ -44,4 +44,3 @@ You can also grab a copy of Kinetica Kickbox.js from our GitHub page here: [http
 - [API](./docs/api.md)
 - [WMS Layers](./docs/wms.md)
 - [Point Clustering](./docs/point-clustering.md)
-

@@ -553,7 +553,10 @@ function _addSourceAndLayer(map, wmsUrl, layerId, layerParams, options) {
  */
 function getDivDimensions (divId) {
   let div = document.getElementById(divId);
-  return {height: div.clientHeight, width: div.clientWidth};
+  return {
+    height: lodash.get(div, 'clientHeight', 0),
+    width: lodash.get(div, 'clientWidth', 0)
+  };
 }
 
 /**
