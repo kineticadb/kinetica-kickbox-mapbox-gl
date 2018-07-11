@@ -77,7 +77,7 @@ Updates a WMS layer's parameters with the passed options. Useful for updating WM
 
 **Returns**
 
-An object containing the reraw function and the debounce limit. Useful for testing purposes.
+An object containing the redraw function and the debounce limit. Useful for testing purposes.
 
 **Description**
 

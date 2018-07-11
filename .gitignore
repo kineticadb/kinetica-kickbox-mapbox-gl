@@ -4,3 +4,5 @@
 .DS_STORE
 .vscode/*
 test-output/*
+shell/*
+github/*
