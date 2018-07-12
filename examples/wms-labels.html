@@ -103,7 +103,6 @@
 
                 // Bind UI events to map rendering
                 $(document).ready(function() {
-                    map.on('load', function() {
 
                     // Allow color selection
                     $('#color-picker').change(function(e) {
@@ -131,7 +130,6 @@
                             yAttr: kbConfig.yColumnName
                             // Or if using WKT column
                             // geoAttr: wktColumnName
-                            });
                         });
                     });
                 });

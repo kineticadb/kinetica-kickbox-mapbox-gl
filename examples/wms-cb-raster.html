@@ -111,7 +111,6 @@
 
                 // Bind UI events to map rendering
                 $(document).ready(function() {
-                    map.on('load', function() {
 
                     $('#fit-to-extent').on('click', function() {
                         kickbox.zoomToBounds(map, {
@@ -121,7 +120,6 @@
                             yAttr: kbConfig.yColumnName
                             // Or if using WKT column
                             // geoAttr: kbConfig.wktColumnName
-                            });
                         });
                     });
                 });

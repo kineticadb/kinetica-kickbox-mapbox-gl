@@ -89,14 +89,13 @@
                     // or if using WKT
                     // geoAttr: kbConfig.wktColumnName,
                     renderingOptions: {
-                        POINTCOLORS: '00FF00',
+                        POINTCOLORS: 'FF0000',
                         POINTSIZES: 3
                     },
                 });
 
                 // Bind UI events to map rendering
                 $(document).ready(function() {
-                    map.on('load', function() {
 
                     // Allow color selection
                     $('#color-picker').change(function(e) {
@@ -124,7 +123,6 @@
                             yAttr: kbConfig.yColumnName
                             // Or if using WKT column
                             // geoAttr: kbConfig.wktColumnName
-                            });
                         });
                     });
                 });
