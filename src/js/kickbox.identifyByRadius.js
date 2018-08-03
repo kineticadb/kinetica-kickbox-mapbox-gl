@@ -48,13 +48,8 @@ var modes = {};
  */
 function enableIdentifyByRadiusMode(map, options) {
   // We only allow one identify mode enabled at one time.
-  // Loop through all modes and disable them all before proceeding
-  lodash.forEach(modes, (mode, key) => {
-    if (!mode) {
-      return;
-    }
-    disableIdentifyByRadiusMode(map, key);
-  });
+  // Loop through all modes and disable them all before proceeding}
+  disableIdentifyByRadiusMode(map);
 
   let MapboxDraw = options.MapboxDraw;
 
@@ -106,24 +101,30 @@ function enableIdentifyByRadiusMode(map, options) {
 }
 
 /**
- * Disables the identify mode and unregisters all of the
- * registered click handlers for this mode
+ * Disables any/all currently active identify modes and
+ * unregisters all of the registered click handlers for
+ * the active mode(s).
  * @param {Object} map - The mapbox map
- * @param {String} layerId - The layer id used for the identify mode
  */
-function disableIdentifyByRadiusMode(map, layerId) {
-  // Safely disable the mode and kill its popup
-  if (modes[layerId]) {
-    modes[layerId].disableMode();
-    modes[layerId] = null;
-  }
+function disableIdentifyByRadiusMode(map) {
+  lodash.forEach(modes, (mode, layerId) => {
+    if (!mode) {
+      return;
+    }
 
-  // Safely remove the control from the map
-  if (controls[layerId]) {
-    map.removeControl(controls[layerId]);
-    controls[layerId] = null;
-    controls[layerId] = null;
-  }
+    // Safely disable the mode and kill its popup
+    if (modes[layerId]) {
+      modes[layerId].disableMode();
+      modes[layerId] = null;
+    }
+
+    // Safely remove the control from the map
+    if (controls[layerId]) {
+      map.removeControl(controls[layerId]);
+      controls[layerId] = null;
+      controls[layerId] = null;
+    }
+  });
 }
 
 // #endregion Public Functions

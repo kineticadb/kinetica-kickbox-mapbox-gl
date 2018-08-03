@@ -1,4 +1,4 @@
-# **WMS Layers**
+# **Point Clustering**
 
 [< Back to Read Me](../README.md)
 

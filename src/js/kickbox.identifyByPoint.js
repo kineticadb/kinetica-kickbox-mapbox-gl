@@ -47,12 +47,7 @@ var modes = {};
  *                                                    See documentation for transformation function formatting.
  */
 function enableIdentifyByPointMode(map, options) {
-  lodash.forEach(modes, (mode, key) => {
-    if (!mode) {
-      return;
-    }
-    disableIdentifyByPointMode(map, key);
-  });
+  disableIdentifyByPointMode(map);
   let MapboxDraw = options.MapboxDraw;
 
   // Scaffold the mode properties
@@ -109,20 +104,24 @@ function enableIdentifyByPointMode(map, options) {
  * Disables the identify mode and unregisters all of the
  * registered click handlers for this mode
  * @param {Object} map - The mapbox map
- * @param {String} layerId - The layer id used for the identify mode
  */
-function disableIdentifyByPointMode(map, layerId) {
-  // Safely disable the mode and kill its popup
-  if (modes[layerId]) {
-    modes[layerId].disableMode();
-    modes[layerId] = null;
-  }
+function disableIdentifyByPointMode(map) {
+  lodash.forEach(modes, (mode, layerId) => {
+    if (!mode) {
+      return;
+    }
+    // Safely disable the mode and kill its popup
+    if (modes[layerId]) {
+      modes[layerId].disableMode();
+      modes[layerId] = null;
+    }
 
-  // Safely remove the control from the map
-  if (controls[layerId]) {
-    map.removeControl(controls[layerId]);
-    controls[layerId] = null;
-  }
+    // Safely remove the control from the map
+    if (controls[layerId]) {
+      map.removeControl(controls[layerId]);
+      controls[layerId] = null;
+    }
+  });
 }
 
 // #endregion Public Functions

@@ -126,7 +126,7 @@ describe('Identify by Radius Module', () => {
         td.when(identify._identifyByPoint_spec.modes.Spengler.disableMode())
           .thenDo(function() { fired = true; });
 
-        identify.disableIdentifyByPointMode(map, 'Spengler');
+        identify.disableIdentifyByPointMode(map);
 
         fired.should.equal(true);
         debugger;
@@ -151,7 +151,7 @@ describe('Identify by Radius Module', () => {
         td.when(map.removeControl(identify._identifyByPoint_spec.controls.Spengler))
           .thenDo(function() { fired = true; });
 
-        identify.disableIdentifyByPointMode(map, 'Spengler');
+        identify.disableIdentifyByPointMode(map);
 
         fired.should.equal(true);
         should.equal(identify._identifyByPoint_spec.controls.Spengler, null);
