@@ -5,8 +5,9 @@
     <title>Kinetica Kickbox: Identify by Radius Example</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-    <!-- Include Mapbox stylesheet -->
+    <!-- Include Mapbox and Mapbox Draw stylesheets -->
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
 
     <!-- Include Kickbox CSS -->
     <link rel="stylesheet" href='../dist/kickbox.css' />
@@ -39,8 +40,10 @@
     <!-- Include a map div -->
     <div id="map"></div>
 
-    <!-- Include mapbox and kickbox library -->
+    <!-- Include mapbox, mapbox draw, and kickbox library -->
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.js'></script>
+
     <script src="../dist/kickbox.min.js"></script>
 
     <!-- Configure Your Kinetica Config Here. Exposes a varaible called "kbConfig" -->
@@ -49,7 +52,7 @@
     <!-- jQuery only used to bind form events for this demo -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script>
-        (function(mapboxgl, kbConfig) {
+        (function(mapboxgl, kbConfig, MapboxDraw) {
 
             // Initialize the web map
             var layerId = kbConfig.tableName + '-raster';
@@ -84,6 +87,7 @@
                 // Setup identify properties
                 var identifyOptions = {
                     mapboxgl: mapboxgl,
+                    MapboxDraw: MapboxDraw,
                     map: map,
                     kineticaUrl: kbConfig.kineticaUrl,
                     tableName: kbConfig.tableName,
@@ -103,7 +107,7 @@
                     }
                 });
             });
-        })(window.mapboxgl, window.kbConfig);
+        })(window.mapboxgl, window.kbConfig, window.MapboxDraw);
     </script>
 </body>
 </html>
