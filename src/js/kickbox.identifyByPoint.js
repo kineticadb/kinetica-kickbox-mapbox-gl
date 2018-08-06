@@ -6,26 +6,11 @@
 
 // #region
 import {Spinner} from 'spin.js';
-import forEach from 'lodash/forEach';
 
+import identifyState from './kickbox.identifyState';
 import IdentifyByPointMode from './kickbox.identifyByPointMode.drawing';
 
-const lodash = {
-  forEach
-};
-
 // #endregion Imported Modules
-
-//////////////////////////////
-// Private Vars
-//////////////////////////////
-
-// #region
-
-var controls = {};
-var modes = {};
-
-// #endregion Private Vars
 
 //////////////////////////////
 // Public Functions
@@ -47,7 +32,8 @@ var modes = {};
  *                                                    See documentation for transformation function formatting.
  */
 function enableIdentifyByPointMode(map, options) {
-  disableIdentifyByPointMode(map);
+  identifyState.disableIdentifyMode(map);
+
   let MapboxDraw = options.MapboxDraw;
 
   // Scaffold the mode properties
@@ -77,10 +63,10 @@ function enableIdentifyByPointMode(map, options) {
   }
 
   // Add the mode to the registry
-  modes[options.layerId] = mode;
+  identifyState.modes[options.layerId] = mode;
 
   // Add the control to the registry
-  controls[options.layerId] = new MapboxDraw({
+  identifyState.controls[options.layerId] = new MapboxDraw({
     defaultMode: 'identify_mode',
     controls: {
       point: false,
@@ -95,33 +81,9 @@ function enableIdentifyByPointMode(map, options) {
     }, MapboxDraw.modes)
   });
 
-  modes[options.layerId] = mode;
+  identifyState.modes[options.layerId] = mode;
 
-  map.addControl(controls[options.layerId], 'top-left');
-}
-
-/**
- * Disables the identify mode and unregisters all of the
- * registered click handlers for this mode
- * @param {Object} map - The mapbox map
- */
-function disableIdentifyByPointMode(map) {
-  lodash.forEach(modes, (mode, layerId) => {
-    if (!mode) {
-      return;
-    }
-    // Safely disable the mode and kill its popup
-    if (modes[layerId]) {
-      modes[layerId].disableMode();
-      modes[layerId] = null;
-    }
-
-    // Safely remove the control from the map
-    if (controls[layerId]) {
-      map.removeControl(controls[layerId]);
-      controls[layerId] = null;
-    }
-  });
+  map.addControl(identifyState.controls[options.layerId], 'top-left');
 }
 
 // #endregion Public Functions
@@ -133,15 +95,14 @@ function disableIdentifyByPointMode(map) {
 // #region
 
 let mod = {
-  disableIdentifyByPointMode,
   enableIdentifyByPointMode
 };
 
 // TODO: Come up with a cleaner solution to replace modules in tests
 if (typeof ENV_TESTING !== 'undefined' && ENV_TESTING === true) {
   mod._identifyByPoint_spec = {
-    modes,
-    controls
+    modes: identifyState.modes,
+    controls: identifyState.controls
   }
 }
 

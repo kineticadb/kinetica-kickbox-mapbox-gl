@@ -8,24 +8,9 @@
 import {Spinner} from 'spin.js';
 
 import IdentifyByRadiusMode from './kickbox.identifyByRadiusMode.drawing';
-import forEach from 'lodash/forEach';
-
-const lodash = {
-  forEach
-};
+import identifyState from './kickbox.identifyState';
 
 // #endregion Imported Modules
-
-//////////////////////////////
-// Private Vars
-//////////////////////////////
-
-// #region
-
-var controls = {};
-var modes = {};
-
-// #endregion Private Vars
 
 //////////////////////////////
 // Public Functions
@@ -49,7 +34,7 @@ var modes = {};
 function enableIdentifyByRadiusMode(map, options) {
   // We only allow one identify mode enabled at one time.
   // Loop through all modes and disable them all before proceeding}
-  disableIdentifyByRadiusMode(map);
+  identifyState.disableIdentifyMode(map);
 
   let MapboxDraw = options.MapboxDraw;
 
@@ -79,10 +64,10 @@ function enableIdentifyByRadiusMode(map, options) {
   }
 
   // Add the mode to the registry
-  modes[options.layerId] = mode;
+  identifyState.modes[options.layerId] = mode;
 
   // Add the control to the registry
-  controls[options.layerId] = new MapboxDraw({
+  identifyState.controls[options.layerId] = new MapboxDraw({
     defaultMode: 'identify_mode',
     controls: {
       point: false,
@@ -97,34 +82,7 @@ function enableIdentifyByRadiusMode(map, options) {
     }, MapboxDraw.modes)
   });
 
-  map.addControl(controls[options.layerId], 'top-left');
-}
-
-/**
- * Disables any/all currently active identify modes and
- * unregisters all of the registered click handlers for
- * the active mode(s).
- * @param {Object} map - The mapbox map
- */
-function disableIdentifyByRadiusMode(map) {
-  lodash.forEach(modes, (mode, layerId) => {
-    if (!mode) {
-      return;
-    }
-
-    // Safely disable the mode and kill its popup
-    if (modes[layerId]) {
-      modes[layerId].disableMode();
-      modes[layerId] = null;
-    }
-
-    // Safely remove the control from the map
-    if (controls[layerId]) {
-      map.removeControl(controls[layerId]);
-      controls[layerId] = null;
-      controls[layerId] = null;
-    }
-  });
+  map.addControl(identifyState.controls[options.layerId], 'top-left');
 }
 
 // #endregion Public Functions
@@ -136,15 +94,14 @@ function disableIdentifyByRadiusMode(map) {
 // #region
 
 let mod = {
-  disableIdentifyByRadiusMode,
   enableIdentifyByRadiusMode
 };
 
 // TODO: Come up with a cleaner solution to replace modules in tests
 if (typeof ENV_TESTING !== 'undefined' && ENV_TESTING === true) {
   mod._identifyByRadius_spec = {
-    modes,
-    controls
+    modes: identifyState.modes,
+    controls: identifyState.controls
   }
 }
 

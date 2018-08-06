@@ -10,9 +10,9 @@ chai.use(chaiAsPromsied);
 const should = chai.should();
 
 const identify = require('./../test-output/kickbox.identifyByRadius');
+const identifyState = require('./../test-output/kickbox.identifyState');
 const kb = require('./../test-output/kickbox');
 const helper = require('./test.helper');
-const td = require('testdouble');
 
 describe('Identify by Radius Module', () => {
   describe('#enableIdentifyByRadiusMode', () => {
@@ -36,7 +36,6 @@ describe('Identify by Radius Module', () => {
         mode.should.have.property('yAttr').and.equal(identifyOptions.yAttr);
       });
     });
-
     it('should accept a geoAttr in place of x/y columns', () => {
       let identifyOptions = {
         MapboxDraw: helper.mockMapboxDraw(),
@@ -102,58 +101,6 @@ describe('Identify by Radius Module', () => {
       return kb.initMap(mapOptions).then(map => {
         identify.enableIdentifyByRadiusMode(map, identifyOptions);
         map.controls.should.have.lengthOf(1);
-      });
-    });
-  });
-
-  describe('#disableIdentifyByRadiusMode', () => {
-    let mapOptions = helper.mockInitMapOptions();
-
-    it('should disable the mode', () => {
-      let identifyOptions = {
-        MapboxDraw: helper.mockMapboxDraw(),
-        mapboxgl: helper.mockMapboxGl(),
-        tableName: 'Who you gonna call?',
-        kineticaUrl: 'Ghostbusters',
-        layerId: 'Spengler',
-        xAttr: 'Stanz',
-        yAttr: 'Venkman'
-      };
-      return kb.initMap(mapOptions).then(map => {
-        let fired = false;
-        identify.enableIdentifyByRadiusMode(map, identifyOptions);
-        td.replace(identify._identifyByRadius_spec.modes.Spengler, 'disableMode');
-        td.when(identify._identifyByRadius_spec.modes.Spengler.disableMode())
-          .thenDo(function() { fired = true; });
-
-        identify.disableIdentifyByRadiusMode(map);
-
-        fired.should.equal(true);
-        should.equal(identify._identifyByRadius_spec.modes.Spengler, null);
-      });
-    });
-
-    it('should remove the control', () => {
-      let identifyOptions = {
-        MapboxDraw: helper.mockMapboxDraw(),
-        mapboxgl: helper.mockMapboxGl(),
-        tableName: 'Who you gonna call?',
-        kineticaUrl: 'Ghostbusters',
-        layerId: 'Spengler',
-        xAttr: 'Stanz',
-        yAttr: 'Venkman'
-      };
-      return kb.initMap(mapOptions).then(map => {
-        let fired = false;
-        identify.enableIdentifyByRadiusMode(map, identifyOptions);
-        td.replace(map, 'removeControl');
-        td.when(map.removeControl(identify._identifyByRadius_spec.controls.Spengler))
-          .thenDo(function() { fired = true; });
-
-        identify.disableIdentifyByRadiusMode(map);
-
-        fired.should.equal(true);
-        should.equal(identify._identifyByRadius_spec.controls.Spengler, null);
       });
     });
   });

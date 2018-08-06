@@ -30,6 +30,7 @@ import identifyByPoint from '@/js/kickbox.identifyByPoint';
 import labels from '@/js/kickbox.labels';
 import logger from '@/js/logger';
 import raster from '@/js/kickbox.raster';
+import identifyState from '@/js/kickbox.identifyState';
 
 // Organize modules in lightweight lodash
 const lodash = {
@@ -442,6 +443,15 @@ function offById(name, cbId) {
   events.unregisterById(name, cbId);
 }
 
+/**
+ * Disables the identify mode and unregisters all of the
+ * registered click handlers for this mode
+ * @param {Object} map - The mapbox map
+ */
+function disableIdentifyMode(map) {
+  identifyState.disableIdentifyMode(map);
+}
+
 // #endregion Public Functions
 
 //////////////////////////////
@@ -486,6 +496,7 @@ function _getLayerDefaults(layerType) {
 let mod = {
   addClusterLayer,
   addWmsLayer,
+  disableIdentifyMode,
   on,
   off,
   offById,

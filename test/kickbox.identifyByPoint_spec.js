@@ -12,7 +12,6 @@ const should = chai.should();
 const identify = require('./../test-output/kickbox.identifyByPoint');
 const kb = require('./../test-output/kickbox');
 const helper = require('./test.helper');
-const td = require('testdouble');
 
 describe('Identify by Radius Module', () => {
   describe('#enableIdentifyByPointMode', () => {
@@ -102,59 +101,6 @@ describe('Identify by Radius Module', () => {
       return kb.initMap(mapOptions).then(map => {
         identify.enableIdentifyByPointMode(map, identifyOptions);
         map.controls.should.have.lengthOf(1);
-      });
-    });
-  });
-
-  describe('#disableIdentifyByPointMode', () => {
-    let mapOptions = helper.mockInitMapOptions();
-
-    it('should disable the mode', () => {
-      let identifyOptions = {
-        MapboxDraw: helper.mockMapboxDraw(),
-        mapboxgl: helper.mockMapboxGl(),
-        tableName: 'Who you gonna call?',
-        kineticaUrl: 'Ghostbusters',
-        layerId: 'Spengler',
-        xAttr: 'Stanz',
-        yAttr: 'Venkman'
-      };
-      return kb.initMap(mapOptions).then(map => {
-        let fired = false;
-        identify.enableIdentifyByPointMode(map, identifyOptions);
-        td.replace(identify._identifyByPoint_spec.modes.Spengler, 'disableMode');
-        td.when(identify._identifyByPoint_spec.modes.Spengler.disableMode())
-          .thenDo(function() { fired = true; });
-
-        identify.disableIdentifyByPointMode(map);
-
-        fired.should.equal(true);
-        debugger;
-        should.equal(identify._identifyByPoint_spec.modes.Spengler, null);
-      });
-    });
-
-    it('should remove the control', () => {
-      let identifyOptions = {
-        MapboxDraw: helper.mockMapboxDraw(),
-        mapboxgl: helper.mockMapboxGl(),
-        tableName: 'Who you gonna call?',
-        kineticaUrl: 'Ghostbusters',
-        layerId: 'Spengler',
-        xAttr: 'Stanz',
-        yAttr: 'Venkman'
-      };
-      return kb.initMap(mapOptions).then(map => {
-        let fired = false;
-        identify.enableIdentifyByPointMode(map, identifyOptions);
-        td.replace(map, 'removeControl');
-        td.when(map.removeControl(identify._identifyByPoint_spec.controls.Spengler))
-          .thenDo(function() { fired = true; });
-
-        identify.disableIdentifyByPointMode(map);
-
-        fired.should.equal(true);
-        should.equal(identify._identifyByPoint_spec.controls.Spengler, null);
       });
     });
   });

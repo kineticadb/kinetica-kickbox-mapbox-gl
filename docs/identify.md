@@ -49,7 +49,7 @@ kickbox.enableIdentifyByRadiusMode(map, identifyOptions);
 When you're ready to disable this mode, you can call the following function. Kinetica Kickbox.js does not allow the identify mode to run on more than one layer at a time, so calling this function will disable any currently active Identify by Radius Mode. Note, you should not enable different identify modes at one time either, so take care to disable all other identify modes if you are switching to a new one.
 
 ```javascript
-kickbox.disableIdentifyByRadiusMode(map);
+kickbox.disableIdentifyMode(map);
 ```
 
 ## Enabling Identify by Point Mode
@@ -75,7 +75,7 @@ kickbox.enableIdentifyByPointMode(map, identifyOptions);
 Disabling this mode is just like disabling the Identify by Radius mode:
 
 ```javascript
-kickbox.disableIdentifyByRadiusMode(map);
+kickbox.disableIdentifyMode(map);
 ```
 
 ## Full Code Example

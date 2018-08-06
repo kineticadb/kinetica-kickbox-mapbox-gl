@@ -37,12 +37,10 @@ describe('kickbox', () => {
       });
 
       it('should expose the API of the identifyByRadius sub-module', () => {
-        kb.should.have.property('disableIdentifyByRadiusMode').and.be.a('function');
         kb.should.have.property('enableIdentifyByRadiusMode').and.be.a('function');
       });
 
       it('should expose the API of the identifyByPoint sub-module', () => {
-        kb.should.have.property('disableIdentifyByPointMode').and.be.a('function');
         kb.should.have.property('enableIdentifyByPointMode').and.be.a('function');
       });
     });

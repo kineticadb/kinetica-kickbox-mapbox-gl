@@ -31,6 +31,18 @@ function mockInitMapOptions() {
   };
 }
 
+function mockIdentifyMode(options) {
+  return {
+    disableMode: () => {}
+  }
+}
+
+function mockIdentifyControl(options) {
+  return {
+    disableMode: () => {}
+  }
+}
+
 /**
  * Returns a mock map object with common functions and proeprties stubbed out
  * @returns {Object} - A mock map object
@@ -140,6 +152,8 @@ function mockMapboxGl(options) {
 
 module.exports = {
   mockSuperCluster,
+  mockIdentifyControl,
+  mockIdentifyMode,
   mockInitMapOptions,
   mockMapboxGl,
   mockMap,

@@ -9,7 +9,8 @@ const config = {
     'kickbox.cluster': './src/js/kickbox.cluster.js',
     'kickbox.events': './src/js/kickbox.events.js',
     'kickbox.identifyByRadius': './src/js/kickbox.identifyByRadius.js',
-    'kickbox.identifyByPoint': './src/js/kickbox.identifyByPoint.js'
+    'kickbox.identifyByPoint': './src/js/kickbox.identifyByPoint.js',
+    'kickbox.identifyState': './src/js/kickbox.identifyState.js'
   },
   resolve: {
     alias: {

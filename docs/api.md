@@ -305,7 +305,7 @@ Enables the identify by radius mode.
 `options.transformations` | `Array<Object>` | No | `[{condition: (columnName, columnType) => { return columnName === 'color_code'}, transformation: (record, name) => { record[name] = '#' + record[name]; return record; }}]` | An array of objects that contain two properties: `condition` which holds a function to determine whether the record should be transformed, and `transformation`, which holds a function that performs the actual transformation of the record. See the [Identify Documentation](./identify.md) for more information.
 
 
-## `disableIdentifyByRadiusMode(map) -> {Void}`
+## `disableIdentifyMode(map) -> {Void}`
 
 **Returns**
 
@@ -313,7 +313,7 @@ Void.
 
 **Description**
 
-Disables the currently active identify by radius mode and unregisters all callbacks driving the user interaction with this mode.
+Disables the currently active identify mode and unregisters all callbacks driving the user interaction with this mode.
 
 **Note:** Kinetica Kickbox.js only allows an identify mode to be active on one layer at a time. Nor should you activate multiple identify modes simultaneously.
 
@@ -344,21 +344,5 @@ Enables the identify by radius mode.
 `options.yAttr` | `String` | Yes (If not using a WKT column) | `y` | The name of the column containing the y values.
 `options.geoAttr` | `String` | Yes (If not using x/y columns) | `wkt` | The name of the column containing the WKT values.
 `options.transformations` | `Array<Object>` | No | `[{condition: (columnName, columnType) => { return columnName === 'color_code'}, transformation: (record, name) => { record[name] = '#' + record[name]; return record; }}]` | An array of objects that contain two properties: `condition` which holds a function to determine whether the record should be transformed, and `transformation`, which holds a function that performs the actual transformation of the record. See the [Identify Documentation](./identify.md) for more information.
-
-## `disableIdentifyByPointMode(map) -> {Void}`
-
-**Returns**
-
-Void.
-
-**Description**
-
-Disables the currently active identify by point mode and unregisters all callbacks driving the user interaction with this mode.
-
-**Note:** Kinetica Kickbox.js only allows an identify mode to be active on one layer at a time. Nor should you activate multiple identify modes simultaneously.
-
-| Parameter | Type | Required|  Example | Description |
-| --- | --- | --- | --- | --- |
-`map` | `Object` | Yes | `map` | The Mapbox map object.
 
 [< Back to Read Me](../README.md)
