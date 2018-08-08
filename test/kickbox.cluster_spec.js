@@ -58,7 +58,7 @@ describe('Cluster Module', () => {
       let defaultOptions = {
         clusterRadius: 40,
         clusterMaxZoom: 14,
-        aggregations: [],
+        clientAggregations: [],
         labelColor: '#000000',
         labelHaloColor: '#FFFFFF',
         minSize: 1,
