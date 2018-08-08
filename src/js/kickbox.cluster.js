@@ -66,7 +66,7 @@ async function addClusterLayer(map, options) {
   let defaults = {
     clusterRadius: lodash.get(options, 'clusterRadius', 40),
     clusterMaxZoom: lodash.get(options, 'clusterMaxZoom', 14),
-    aggregations: lodash.get(options, 'aggregations', []),
+    clientAggregations: lodash.get(options, 'clientAggregations', []),
     labelColor: lodash.get(options, 'labelColor', '#000000'),
     labelHaloColor: lodash.get(options, 'labelHaloColor', '#FFFFFF'),
     minSize: lodash.get(options, 'minSize', 1),
@@ -86,15 +86,9 @@ async function addClusterLayer(map, options) {
     logger.error(err);
   }
 
-  // Add custom aggregations
-  let aggregations = lodash.cloneDeep(defaults.aggregations);
-  if (options.aggregations) {
-    lodash.merge(aggregations, defaults.aggregations);
-  }
-
   // Initialize the cluster with data loaded from Kinetica
   let cluster = this.initCluster(
-    features, defaults.clusterRadius, defaults.clusterMaxZoom, options.clientAggregations);
+    features, defaults.clusterRadius, defaults.clusterMaxZoom, defaults.clientAggregations);
 
   // Add the source and layer to the map
   events.trigger('beforeClusterLayerAdded');
@@ -143,12 +137,12 @@ async function addClusterLayer(map, options) {
 /**
  * Initializes the cluster object
  * @param {Array<Object>} features - An array of GeoJSON Features
- * @param {*} clusterRadius - The cluster radius size
- * @param {*} clusterMaxZoom - The max zoom
- * @param {Array<Object>} aggregations - An array of objects with aggregation parameters
- * @param {String} aggregations.key - The key of the aggregation
- * @param {Any} aggregations.initial - The initial value to set the property to
- * @param {Function} aggregations.reduce - The reduce function. Takes accumulated and current value as parameters.
+ * @param {Number} clusterRadius - The cluster radius size
+ * @param {Number} clusterMaxZoom - The maximum zoom for clustering
+ * @param {Array<Object>} clientAggregations - An array of objects with aggregation parameters
+ * @param {String} clientAggregations.key - The key of the aggregation
+ * @param {Any} clientAggregations.initial - The initial value to set the property to
+ * @param {Function} clientAggregations.reduce - The reduce function. Takes accumulated and current value as parameters.
  * @returns {Object} - The cluster object
  */
 function initCluster (features, clusterRadius, clusterMaxZoom, clientAggregations) {
@@ -203,6 +197,7 @@ function initCluster (features, clusterRadius, clusterMaxZoom, clientAggregation
   // Supercluster with property aggregation
   let cluster = supercluster({
     radius: clusterRadius,
+    maxZoom: clusterMaxZoom,
     initial: function () {
       let retVal = {};
 
@@ -321,7 +316,7 @@ function _classify(name) {
  * @param {String} options.yAttr - Required. The name of the y column.
  * @param {String} options.kineticaUrl - Required. The Kinetica API url including the port number
  * @param {Int} options.precision - Required. The precision with which to group the clusters at the lowest level
- * @param {Array<Strign>} options.dbAggregates - Optional. A array of aggregates you wish to perform at the database level.
+ * @param {Array<Strign>} options.dbAggregations - Optional. A array of aggregates you wish to perform at the database level.
  * @returns {Array<Object>} - An array of record objects from the DB, grouped by the cluster column
  */
 function _loadClusterFeatures(map, options) {
@@ -343,8 +338,8 @@ function _loadClusterFeatures(map, options) {
   };
 
   // Push all db aggregations into the query
-  if (options.dbAggregates) {
-    lodash.forEach(options.dbAggregates, (agg) => {
+  if (options.dbAggregations) {
+    lodash.forEach(options.dbAggregations, (agg) => {
       postOptions['column_names'].push(agg);
     });
   }
