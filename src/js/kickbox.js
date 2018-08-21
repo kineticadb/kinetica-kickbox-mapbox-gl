@@ -202,6 +202,12 @@ function updateWmsLayer(map, options) {
     delete queryParams['Y_ATTR'];
   }
 
+  // Allow re-pointing of table
+  let tableName = lodash.get(options, 'tableName', lodash.get(options, 'layers', null));
+  if (tableName) {
+    helper.setNoCase(queryParams, 'layers', tableName);
+  }
+
   // Map rendering options into the URL
   lodash.forEach(options.renderingOptions, (option, key) => {
     helper.setNoCase(queryParams, key, option);

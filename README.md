@@ -1,4 +1,4 @@
-# Kinetica Kickbox.js Mapbox GL
+# Kinetica Kickbox.js for Mapbox GL
 
 ## Library Overview
 Kinetica Kickbox.js is a client-side code-acellerator library aimed at getting you up and running with Kinetica and Mapbox GL as quickly as possible.
