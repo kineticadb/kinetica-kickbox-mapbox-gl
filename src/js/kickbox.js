@@ -92,8 +92,21 @@ function initMap (options) {
     });
 
     mapParams.transformRequest = function (url, resourceType) {
-      let encodedCreds = btoa(`${username}:${password}`);
+      // Adds a Kickbox identifier for integration adoption tracking
+      if (url.slice(0, 22) === 'https://api.mapbox.com' ||
+        url.slice(0, 26) === 'https://a.tiles.mapbox.com' ||
+        url.slice(0, 26) === 'https://b.tiles.mapbox.com' ||
+        url.slice(0, 26) === 'https://c.tiles.mapbox.com' ||
+        url.slice(0, 26) === 'https://d.tiles.mapbox.com'
+      ) {
+        // Add Mapboxgl-Jupyter Plugin identifier for Mapbox API traffic
+        return {
+          url: [url.slice(0, url.indexOf('?') + 1), 'pluginName=Kickbox&', url.slice(url.indexOf('?') + 1)].join('')
+        }
+      }
+
       if (resourceType === 'Image' && url.startsWith(options.wmsUrl)) {
+        let encodedCreds = btoa(`${username}:${password}`);
         return {
           url: url,
           headers: {'Authorization': `Basic ${encodedCreds}`}
