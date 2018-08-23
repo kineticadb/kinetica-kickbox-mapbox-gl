@@ -138,7 +138,6 @@ function updateWmsLayerType(map, layerId, layerType, debounceLimit) {
   events.trigger('beforeUpdateWmsLayerType');
 
   let sourceName = layerId + '-source';
-  let layerName = layerId + '-layer';
   let source = map.getSource(sourceName);
   if (!source) {
     let err = new Error(`No source found with name: ${sourceName}`);
@@ -169,7 +168,7 @@ function updateWmsLayerType(map, layerId, layerType, debounceLimit) {
   let baseUrl = source.url.split('?')[0];
   let dbLimit = debounceLimit || 200;
 
-  let redraw = _rebindWmsEvents(map, baseUrl, sourceName, layerName, queryParams, dbLimit);
+  let redraw = _rebindWmsEvents(map, baseUrl, sourceName, layerId, queryParams, dbLimit);
 
   events.trigger('afterUpdateWmsLayerType');
 
@@ -191,7 +190,6 @@ function updateWmsLayer(map, options) {
   // Build the new params URL
   let wmsUrl = options.wmsUrl;
   let sourceName = options.layerId + '-source';
-  let layerName = options.layerId + '-layer';
   let source = map.getSource(sourceName);
   if (!source) {
     logger.warn(`No source found with name: ${sourceName}`);
@@ -227,12 +225,12 @@ function updateWmsLayer(map, options) {
   });
 
   let debounceLimit = lodash.get(options, 'debounceLimit', 200);
-  let redraw = _rebindWmsEvents(map, wmsUrl, sourceName, layerName, queryParams, debounceLimit);
+  let redraw = _rebindWmsEvents(map, wmsUrl, sourceName, options.layerId, queryParams, debounceLimit);
 
   events.trigger('afterWmsLayerUpdated');
 
   // Return relevant data for testing
-  return {map, wmsUrl, sourceName, layerName, queryParams, redraw};
+  return {map, wmsUrl, sourceName, layerId: options.layerId, queryParams, redraw};
 }
 
 /**
@@ -240,12 +238,12 @@ function updateWmsLayer(map, options) {
  * @param {Object} map - The Mapbox map
  * @param {String} wmsUrl - The built WMS url
  * @param {String} sourceName - The name of the source
- * @param {String} layerName - The layer name
+ * @param {String} layerId - The layer ID
  * @param {Object} queryParams - The query parameters object
  * @param {Number} debounceLimit - The debounce limit in milliseconds
  * @returns {Function} - The redraw function.
  */
-function _rebindWmsEvents(map, wmsUrl, sourceName, layerName, queryParams, debounceLimit) {
+function _rebindWmsEvents(map, wmsUrl, sourceName, layerId, queryParams, debounceLimit) {
   // Find the listeners and remove them
   let zoomIndex = lodash.findIndex(map._listeners.zoomend, (fn) => { return fn.sourceName === sourceName; });
   let moveIndex = lodash.findIndex(map._listeners.moveend, (fn) => { return fn.sourceName === sourceName; });
@@ -253,7 +251,7 @@ function _rebindWmsEvents(map, wmsUrl, sourceName, layerName, queryParams, debou
   map._listeners.moveend.splice(moveIndex, 1);
 
   // Rebind update
-  var redraw = helper.setSourceParams.bind(this, map, wmsUrl, sourceName, layerName, queryParams);
+  var redraw = helper.bindWmsToSource.bind(this, map, wmsUrl, layerId, queryParams);
   var debouncedRedraw = lodash.debounce(redraw, debounceLimit);
   debouncedRedraw.sourceName = sourceName;
 

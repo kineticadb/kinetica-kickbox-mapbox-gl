@@ -146,7 +146,7 @@ describe('kickbox', () => {
         let kinetiaUrl = 'http://www.starwars.com';
         let layerId = 'Jakku';
         let renderingOptions = {param1: 'finn', param2: 'rey'};
-        td.replace(kb._spec.helper, 'setSourceParams');
+        td.replace(kb._spec.helper, 'bindWmsToSource');
 
         let subject = kb.updateWmsLayer(map, {kinetiaUrl, layerId, renderingOptions}).queryParams;
 
@@ -158,7 +158,7 @@ describe('kickbox', () => {
         let kinetiaUrl = 'http://www.starwars.com';
         let layerId = 'Jakku';
         let renderingOptions = {param1: 'finn', param2: 'rey'};
-        td.replace(kb._spec.helper, 'setSourceParams');
+        td.replace(kb._spec.helper, 'bindWmsToSource');
         kb.updateWmsLayer(map, {kinetiaUrl, layerId, renderingOptions});
         map._listeners.zoomend[0].identifier = 'OLD';
         map._listeners.moveend[0].identifier = 'OLD';

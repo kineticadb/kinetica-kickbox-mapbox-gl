@@ -56,10 +56,10 @@ let baseLayerParams = {
 function scaffoldSourceAndLayer(map, layerParams, options) {
   // Add source and layer to map to house the wms images
   var wmsUrl = options.wmsUrl;
-  _addSourceAndLayer(map, wmsUrl, options.layerId, layerParams, options);
+  bindWmsToSource(map, wmsUrl, options.layerId, layerParams, options);
 
   // Register the moveend and zoomend events to redraw the wms layer
-  var redraw = setSourceParams.bind(this, map, wmsUrl, options.layerId + '-source', options.layerId + '-layer', layerParams);
+  var redraw = bindWmsToSource.bind(this, map, wmsUrl, options.layerId, layerParams, options);
 
   // Debounce the update function to avoid excessive calls when zooming with a scroll wheel
   let debounceLimit = lodash.get(options, 'debounceLimit', 200);
@@ -136,33 +136,6 @@ function getTableBoundary(options) {
           return [[xBounds.min, yBounds.min], [xBounds.max, yBounds.max]];
         });
     });
-}
-
-/**
- * Sets the soruce params on a heatmap source
- * @param {Object} map - The mapbox map
- * @param {String} wmsUrl - The WMS Url
- * @param {String} sourceId - The source ID for the heatmap
- * @param {Object} params - The url params for the wms heatmap view
- */
-function setSourceParams (map, wmsUrl, sourceId, layerId, params) {
-  var coords = getCoordsFromBounds(map.getBounds());
-  let dimensions = getDivDimensions(map._container.id);
-
-  params.bbox = getCurrentBbox(map);
-  params.srs = 'EPSG:3857';
-  params.height = dimensions.height;
-  params.width = dimensions.width;
-
-  let source = map.getSource(sourceId);
-  if (!source) {
-    return;
-  }
-
-  lodash.set(source, 'url', buildUrl(wmsUrl, params));
-  lodash.set(source, 'options.url', buildUrl(wmsUrl, params));
-  lodash.set(source, 'coordinates', coords);
-  source.load();
 }
 
 /**
@@ -509,11 +482,21 @@ function getCoordinateParams(url) {
  * @param {Object} layerParams - The layer parameters to use to render the wms images
  * @param {Object} options - The options passed from the add function
  */
-function _addSourceAndLayer(map, wmsUrl, layerId, layerParams, options) {
+function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
   logger.debug('Adding the source to the map...');
 
   let mbSourceName = layerId + '-source';
   let mbLayerName = layerId + '-layer';
+
+  // Remove 'em first
+  removeLayer(map, mbLayerName);
+  removeSource(map, mbSourceName);
+
+  let dimensions = getDivDimensions(map._container.id);
+  layerParams.bbox = getCurrentBbox(map);
+  layerParams.srs = 'EPSG:3857';
+  layerParams.height = dimensions.height;
+  layerParams.width = dimensions.width;
 
   // Add the source to the map
   addSource(map, mbSourceName, {
@@ -525,7 +508,7 @@ function _addSourceAndLayer(map, wmsUrl, layerId, layerParams, options) {
   // Determine where in the layer order to add the layer
   let beforeId;
   let drawLayer = map.getLayer('gl-draw-polygon-fill-inactive.cold');
-  if (options.before) {
+  if (options && options.before) {
     let beforeLayer = map.getLayer(options.before + '-layer');
     if (beforeLayer) {
       beforeId = beforeLayer.id;
@@ -616,6 +599,7 @@ function _parseData (dataStr) {
 export default {
   addLayer,
   addSource,
+  bindWmsToSource,
   buildUrl,
   baseLayerParams,
   boundsToFeature,
@@ -636,7 +620,6 @@ export default {
   roundTo,
   scaffoldSourceAndLayer,
   setNoCase,
-  setSourceParams,
   setOptionOrDefault
 };
 
