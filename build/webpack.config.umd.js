@@ -18,6 +18,7 @@ const varConfig = {
   },
   output: {
     library: 'kickbox',
+    libraryExport: 'default',
     filename: 'kickbox.umd.min.js',
     path: path.resolve(__dirname, '../dist'),
     libraryTarget: 'umd'
@@ -38,7 +39,11 @@ const varConfig = {
   },
   plugins: [
     extractSass,
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      output: {
+        comments: false
+      }
+    })
   ]
 };
 
