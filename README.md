@@ -29,7 +29,7 @@ Add this line to your package.json file:
 ```
   "dependencies": {
   ...
-    "kickbox": "kinetica/kinetica-kickbox-mapbox-gl"
+    "kickbox": "kineticadb/kinetica-kickbox-mapbox-gl"
   ...
 ```
 
