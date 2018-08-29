@@ -1,11 +1,11 @@
 {
   "name": "kinetica-mapbox-interop",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "A library that facilitates interoperability between Kinetica and Mapbox.",
   "main": "src/index.js",
   "scripts": {
     "build:all": "npm run test && npm run clean:all && npm run build:dev && npm run build:prod",
-    "build:prod": "npm run test && npm run clean:prod && npm run webpack:prod && npm run sass:prod",
+    "build:prod": "npm run test && npm run clean:prod && npm run webpack:prod && npm run webpack:umd && npm run sass:prod",
     "build:dev": "npm run clean:dev && npm run webpack:dev && npm run sass:dev",
     "build:test": "npx webpack --config build/webpack.config.test.js",
     "clean:all": "rm -rf test-output && rm -rf dist && rm -rf dev-dist",
@@ -17,6 +17,7 @@
     "test": "npm run build:test && mocha ./test/*_spec.js --opts ./test/mocha.opts",
     "test:debug": "npm run build:test && mocha --inspect-brk",
     "webpack:prod": "npx webpack --config build/webpack.config.js",
+    "webpack:umd": "npx webpack --config build/webpack.config.umd.js",
     "webpack:dev": "npx webpack --config build/webpack.config.development.js",
     "watch:dev": "nodemon --watch ./src -e js,handlebars,scss -x \"npm run build:dev\""
   },
