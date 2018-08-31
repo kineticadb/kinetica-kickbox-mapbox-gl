@@ -91,10 +91,11 @@ function mockMap(options) {
     lodash.merge(src, def);
     map.sources.push(src);
   };
+  map.getStyle = () => ({layers: []})
   map.removeControl = () => {};
   map.addLayer = layer => { map.layers.push(layer); };
-  map.getZoom = () => { return 16; };
-  map.getLayer = name => { return lodash.find(map.layers, layer => { return layer.name === name; }); };
+  map.getZoom = () => 16;
+  map.getLayer = name => lodash.find(map.layers, layer => { return layer.name === name; });
   map.getSource = (id) => { return lodash.find(map.sources, source => { return source.id === id; }); };
   map.getBounds = () => { return {_ne: [0, 0], _sw: [1, 1]}; };
   map.setPaintProperty = (layerId, prop, value) => { map._paintProperties[prop] = {layerId, prop, value}; };

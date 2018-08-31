@@ -491,6 +491,21 @@ function _getOpacity(map, layerId) {
 }
 
 /**
+ * Returns the next layer after the passed layer ID
+ * @param {Object} map - The mapbox map
+ * @param {String} layerId - The layer ID
+ * @returns {String} - Returns the ID of the layer after
+ */
+function _getNextLayerId(map, layerId) {
+  let layers = map.getStyle().layers
+  let index = layers.findIndex(i => i.id === layerId)
+  if (index > -1 && index < layers.length - 1) {
+    return layers[index + 1].id
+  }
+  return null
+}
+
+/**
  * Adds the source and layer to house the wms images from Kinetica
  * @param {Object} map - The Mapbox map
  * @param {String} wmsUrl - The wms endpoint
@@ -505,6 +520,9 @@ function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
 
   // Cache the opacity setting for later
   let opacity = _getOpacity(map, mbLayerName)
+
+  // Preserve layer order
+  let beforeLayerId = _getNextLayerId(map, mbLayerName)
 
   // Remove 'em first
   removeLayer(map, mbLayerName);
@@ -526,17 +544,19 @@ function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
   // Determine where in the layer order to add the layer
   let beforeId;
   let drawLayer = map.getLayer('gl-draw-polygon-fill-inactive.cold');
-  if (options && options.before) {
-    let beforeLayer = map.getLayer(options.before + '-layer');
+  if (options && options.before) { // Prefer the passed option
+    let beforeLayer = map.getLayer(options.before + '-layer') || map.getLayer(options.before);
     if (beforeLayer) {
       beforeId = beforeLayer.id;
     }
-  } else if (drawLayer) {
+  } else if (beforeLayerId) { // Then the previous position
+    beforeId = beforeLayerId;
+  } else if (drawLayer) { // Then the MapboxDraw layers
     let beforeLayer = drawLayer;
     if (beforeLayer) {
       beforeId = beforeLayer.id;
     }
-  } else {
+  } else { // Then nothing
     beforeId = null;
   }
 
