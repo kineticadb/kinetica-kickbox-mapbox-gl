@@ -476,6 +476,21 @@ function getCoordinateParams(url) {
 // #region
 
 /**
+ * Gracefully gets the opacity of a layer
+ * @param {Object} map - The map
+ * @param {String} layerId - The layer ID
+ * @returns {Number} - A number between 0 and 1. Defaults to 1 if
+ * no opacity was found.
+ */
+function _getOpacity(map, layerId) {
+  let layer = map.getLayer(layerId);
+  if (layer) {
+    return map.getPaintProperty(layerId, 'raster-opacity')
+  }
+  return 1;
+}
+
+/**
  * Adds the source and layer to house the wms images from Kinetica
  * @param {Object} map - The Mapbox map
  * @param {String} wmsUrl - The wms endpoint
@@ -487,6 +502,9 @@ function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
 
   let mbSourceName = layerId + '-source';
   let mbLayerName = layerId + '-layer';
+
+  // Cache the opacity setting for later
+  let opacity = _getOpacity(map, mbLayerName)
 
   // Remove 'em first
   removeLayer(map, mbLayerName);
@@ -528,6 +546,9 @@ function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
     type: 'raster',
     source: mbSourceName
   }, beforeId);
+
+  // Re-set the opacity setting
+  map.setPaintProperty(mbLayerName, 'raster-opacity', opacity);
 }
 
 /**

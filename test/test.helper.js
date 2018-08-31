@@ -99,6 +99,7 @@ function mockMap(options) {
   map.getBounds = () => { return {_ne: [0, 0], _sw: [1, 1]}; };
   map.setPaintProperty = (layerId, prop, value) => { map._paintProperties[prop] = {layerId, prop, value}; };
   map.addControl = (control) => { map.controls.push(control); };
+  map.getPaintProperty = () => 'some_value'
   map.transformRequest = (url, resourceType) => { return {url, headers: {Authorization: 'Basic asdf1234==/'}}; };
   map.on = (eName, fn) => {
     if (lodash.includes(map._completedEvents, eName)) {
