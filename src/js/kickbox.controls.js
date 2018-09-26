@@ -22,9 +22,12 @@ import KickboxCbLegendControl from './kickbox.control.cbLegend';
  * @param {Object} cbConfig - The classbreak configuration.
  * @param {Array<String>} cbConfig.cbVals - The array of class breaks
  * @param {Array<String>} cbConfig.pointColors - An array of hex colors WITHOUT THE HASH MARK.
+ * @returns {Object} - The legend control (for easy removal later)
  */
 function addCbLegend(map, legendTitle, location, cbConfig) {
-  map.addControl(new KickboxCbLegendControl(legendTitle, cbConfig.cbVals, cbConfig.pointColors), location);
+  let control = new KickboxCbLegendControl(legendTitle, cbConfig.cbVals, cbConfig.pointColors)
+  map.addControl(control, location);
+  return control
 }
 
 // #endregion Public Functions

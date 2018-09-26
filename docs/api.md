@@ -96,7 +96,7 @@ Changes an existing WMS layer's rendering type and sets all of its parameters to
 
 **Returns**
 
-Void.
+The control object. Useful for removal of the legend at a later time.
 
 **Description**
 
