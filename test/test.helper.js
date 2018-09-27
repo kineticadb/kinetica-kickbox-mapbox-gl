@@ -113,6 +113,15 @@ function mockMap(options) {
     map._listeners[eName].push(fn);
     return map;
   }
+  map.off = (eName, fn) => {
+    if (map._listeners[eName]) {
+      let fnIndex = map._listeners[eName].indexOf(fn)
+      if (fnIndex > -1) {
+        map._listeners[eName].splice(fnIndex, 1);
+      }
+    }
+    return map;
+  }
   map.trigger = eName => {
     map._completedEvents.push(eName);
     lodash.forEach(map._listeners[eName], fn => { fn(); });

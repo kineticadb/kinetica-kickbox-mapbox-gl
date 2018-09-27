@@ -245,10 +245,16 @@ function updateWmsLayer(map, options) {
  */
 function _rebindWmsEvents(map, wmsUrl, sourceName, layerId, queryParams, debounceLimit) {
   // Find the listeners and remove them
-  let zoomIndex = lodash.findIndex(map._listeners.zoomend, (fn) => { return fn.sourceName === sourceName; });
-  let moveIndex = lodash.findIndex(map._listeners.moveend, (fn) => { return fn.sourceName === sourceName; });
-  map._listeners.zoomend.splice(zoomIndex, 1);
-  map._listeners.moveend.splice(moveIndex, 1);
+  let zoomIndex = lodash.findIndex(map._listeners.zoomend, fn => fn.sourceName === sourceName);
+  let moveIndex = lodash.findIndex(map._listeners.moveend, fn => fn.sourceName === sourceName);
+  if (zoomIndex > -1) {
+    let zoomFn = map._listeners.zoomend[zoomIndex]
+    map.off('zoomend', zoomFn)
+  }
+  if (moveIndex > -1) {
+    let moveFn = map._listeners.moveend[moveIndex]
+    map.off('moveend', moveFn)
+  }
 
   // Rebind update
   var redraw = helper.bindWmsToSource.bind(this, map, wmsUrl, layerId, queryParams);
@@ -339,15 +345,27 @@ function addWmsLayer(map, options) {
     cbRaster.validateParams(layerParams);
   }
 
-  // Build the layer and attach the event handlers
-  events.trigger('beforeWmsLayerAdded');
-  helper.scaffoldSourceAndLayer(map, layerParams, options);
-  events.trigger('afterWmsLayerAdded');
+  // Check if layer was already added.
+  // Causes multiple renderings if not removed.
+  let sourceName = `${options.layerId}-source`
+  let existingLayer = map.getLayer(`${options.layerId}-layer`)
+  let existingSource = map.getSource(sourceName)
+  if (existingLayer || existingSource) {
+    events.trigger('beforeWmsLayerAdded');
+    updateWmsLayer(map, options)
+    events.trigger('afterWmsLayerAdded');
+  } else {
+    // Build the layer and attach the event handlers
+    events.trigger('beforeWmsLayerAdded');
+    helper.bindWmsToSource(map, options.wmsUrl, options.layerId, layerParams, options);
+    updateWmsLayer(map, options)
+    events.trigger('afterWmsLayerAdded');
 
-  // Add a patch for window resizing
-  let boundHandler = _readdWmsLayer.bind(this, map, layerParams, options);
-  let resizeHandler = lodash.debounce(boundHandler, 500);
-  window.addEventListener('resize', resizeHandler);
+    // Add a patch for window resizing
+    let boundHandler = _readdWmsLayer.bind(this, map, layerParams, options);
+    let resizeHandler = lodash.debounce(boundHandler, 500);
+    window.addEventListener('resize', resizeHandler);
+  }
 
   // Return relevant properties for testing
   return {layerParams};
@@ -405,7 +423,7 @@ function _readdWmsLayer(map, layerParams, options) {
   let dims = helper.getDivDimensions(map._container.id);
   layerParams.height = dims.height;
   layerParams.width = dims.width;
-  helper.scaffoldSourceAndLayer(map, layerParams, options);
+  helper.bindWmsToSource(map, options.wmsUrl, options.layerId, layerParams, options);
 }
 
 /**

@@ -46,43 +46,6 @@ let baseLayerParams = {
 // #region
 
 /**
- * Scaffolds both a source and a layer and adds them to the
- * map based on the passed layer params and the options that
- * were given to the parent function
- * @param {Object} map - The Mapbox Map
- * @param {Object} layerParams - The layer params
- * @param {Object} options - The options
- */
-function scaffoldSourceAndLayer(map, layerParams, options) {
-  // Add source and layer to map to house the wms images
-  var wmsUrl = options.wmsUrl;
-  bindWmsToSource(map, wmsUrl, options.layerId, layerParams, options);
-
-  // Register the moveend and zoomend events to redraw the wms layer
-  var redraw = bindWmsToSource.bind(this, map, wmsUrl, options.layerId, layerParams, options);
-
-  // Debounce the update function to avoid excessive calls when zooming with a scroll wheel
-  let debounceLimit = lodash.get(options, 'debounceLimit', 200);
-  var debouncedRedraw = lodash.debounce(redraw, debounceLimit);
-  debouncedRedraw.sourceName = options.layerId + '-source';
-
-  // Register the redraw function with the move end and zoom end events
-  map.on('moveend', debouncedRedraw)
-    .on('zoomend', debouncedRedraw);
-
-  // Unregister handlers during a resize event
-  // So extra calls aren't sent
-  map.on('resize', () => {
-    map.off('moveend', debouncedRedraw)
-      .off('zoomend', debouncedRedraw);
-  });
-
-  debouncedRedraw();
-
-  return debouncedRedraw;
-}
-
-/**
  * Returns a GeoJSON object representing a bbox that surrounds all of the features
  * for the given table name
  * @param {Object} options - The options used to query the database
@@ -659,7 +622,6 @@ export default {
   removeLayer,
   removeSource,
   roundTo,
-  scaffoldSourceAndLayer,
   setNoCase,
   setOptionOrDefault
 };

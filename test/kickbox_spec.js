@@ -126,6 +126,7 @@ describe('kickbox', () => {
     describe('#updateWmsLayer', () => {
       let map;
       beforeEach(() => {
+        // map = helper.mockMap();
         map = {
           _listeners: {
             moveend: [],
@@ -136,6 +137,14 @@ describe('kickbox', () => {
         map.on = (eName, fn) => {
           map._listeners[eName].push(fn);
           return map;
+        }
+        map.off = (eName, fn) => {
+          if (map._listeners[eName]) {
+            let index = map._listeners[eName].indexOf(fn)
+            if (index > -1) {
+              map._listeners[eName].splice(index, 1)
+            }
+          }
         }
       });
       afterEach(() => {
