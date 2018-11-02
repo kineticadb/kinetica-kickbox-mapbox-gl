@@ -88,6 +88,7 @@ function mockMap(options) {
     let src = {};
     src.id = id;
     src.load = () => {};
+    src.updateImage = () => {};
     lodash.merge(src, def);
     map.sources.push(src);
   };

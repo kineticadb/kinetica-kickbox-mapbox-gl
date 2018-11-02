@@ -439,21 +439,6 @@ function getCoordinateParams(url) {
 // #region
 
 /**
- * Gracefully gets the opacity of a layer
- * @param {Object} map - The map
- * @param {String} layerId - The layer ID
- * @returns {Number} - A number between 0 and 1. Defaults to 1 if
- * no opacity was found.
- */
-function _getOpacity(map, layerId) {
-  let layer = map.getLayer(layerId);
-  if (layer) {
-    return map.getPaintProperty(layerId, 'raster-opacity')
-  }
-  return 1;
-}
-
-/**
  * Returns the next layer after the passed layer ID
  * @param {Object} map - The mapbox map
  * @param {String} layerId - The layer ID
@@ -476,20 +461,11 @@ function _getNextLayerId(map, layerId) {
  * @param {Object} options - The options passed from the add function
  */
 function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
-  logger.debug('Adding the source to the map...');
-
   let mbSourceName = layerId + '-source';
   let mbLayerName = layerId + '-layer';
 
-  // Cache the opacity setting for later
-  let opacity = _getOpacity(map, mbLayerName)
-
   // Preserve layer order
   let beforeLayerId = _getNextLayerId(map, mbLayerName)
-
-  // Remove 'em first
-  removeLayer(map, mbLayerName);
-  removeSource(map, mbSourceName);
 
   let dimensions = getDivDimensions(map._container.id);
   layerParams.bbox = getCurrentBbox(map);
@@ -497,41 +473,57 @@ function bindWmsToSource(map, wmsUrl, layerId, layerParams, options) {
   layerParams.height = dimensions.height;
   layerParams.width = dimensions.width;
 
-  // Add the source to the map
-  addSource(map, mbSourceName, {
-    type: 'image',
-    url: buildUrl(wmsUrl, layerParams), // Builds the WMS URL from the layer params object
-    coordinates: getCoordsFromBounds(map.getBounds()) // Get a coords array from the current Mapbox bounds
-  });
+  let source = map.getSource(mbSourceName)
+  let layer = map.getLayer(mbLayerName)
 
-  // Determine where in the layer order to add the layer
-  let beforeId;
-  let drawLayer = map.getLayer('gl-draw-polygon-fill-inactive.cold');
-  if (options && options.before) { // Prefer the passed option
-    let beforeLayer = map.getLayer(options.before + '-layer') || map.getLayer(options.before);
-    if (beforeLayer) {
-      beforeId = beforeLayer.id;
-    }
-  } else if (beforeLayerId) { // Then the previous position
-    beforeId = beforeLayerId;
-  } else if (drawLayer) { // Then the MapboxDraw layers
-    let beforeLayer = drawLayer;
-    if (beforeLayer) {
-      beforeId = beforeLayer.id;
-    }
-  } else { // Then nothing
-    beforeId = null;
+  // Add the source to the map, if not already added
+  if (!source) {
+    logger.debug('Adding source to the map...')
+    addSource(map, mbSourceName, {
+      type: 'image',
+      url: buildUrl(wmsUrl, layerParams), // Builds the WMS URL from the layer params object
+      coordinates: getCoordsFromBounds(map.getBounds()) // Get a coords array from the current Mapbox bounds
+    });
   }
 
-  // Finally, add the layer
-  addLayer(map, {
-    id: mbLayerName,
-    type: 'raster',
-    source: mbSourceName
-  }, beforeId);
+  // Add layer to map if not already added
+  if (!layer) {
+    logger.debug('Adding layer to the map...')
+    // Determine where in the layer order to add the layer
+    let beforeId;
+    let drawLayer = map.getLayer('gl-draw-polygon-fill-inactive.cold');
+    if (options && options.before) { // Prefer the passed option
+      let beforeLayer = map.getLayer(options.before + '-layer') || map.getLayer(options.before);
+      if (beforeLayer) {
+        beforeId = beforeLayer.id;
+      }
+    } else if (beforeLayerId) { // Then the previous position
+      beforeId = beforeLayerId;
+    } else if (drawLayer) { // Then the MapboxDraw layers
+      let beforeLayer = drawLayer;
+      if (beforeLayer) {
+        beforeId = beforeLayer.id;
+      }
+    } else { // Then nothing
+      beforeId = null;
+    }
 
-  // Re-set the opacity setting
-  map.setPaintProperty(mbLayerName, 'raster-opacity', opacity);
+    // Finally, add the layer
+    addLayer(map, {
+      id: mbLayerName,
+      type: 'raster',
+      source: mbSourceName
+    }, beforeId);
+  }
+
+  // If both source and layer exist, update the image
+  if (source && layer && source.updateImage) {
+    logger.debug('Updating source image...')
+    source.updateImage({
+      url: buildUrl(wmsUrl, layerParams), // Builds the WMS URL from the layer params object
+      coordinates: getCoordsFromBounds(map.getBounds()) // Get a coords array from the current Mapbox bounds
+    })
+  }
 }
 
 /**

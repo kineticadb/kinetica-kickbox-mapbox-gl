@@ -49,6 +49,7 @@ function enableIdentifyByPointMode(map, options) {
   mode.popupId = 'popup-' + options.layerId;
   mode.popupInstance = new options.mapboxgl.Popup({closeButton: false, closeOnClick: false});
   mode.spin = new Spinner({color: '#CCC', lines: 12});
+  mode.collection = options.collection;
 
   // Set x/y or wkt column names for use in querying
   if (options.xAttr && options.yAttr) {

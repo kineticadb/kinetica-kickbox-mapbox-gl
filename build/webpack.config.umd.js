@@ -2,6 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+if (!global._babelPolyfill) {
+  require('babel-polyfill')
+}
+
 const extractSass = new ExtractTextPlugin({
   filename: 'style.css'
 });
@@ -9,7 +13,7 @@ const extractSass = new ExtractTextPlugin({
 const varConfig = {
   context: path.resolve(__dirname, '../src'),
   entry: {
-    app: ['babel-polyfill', './js/kickbox.js']
+    app: ['./js/kickbox.js']
   },
   resolve: {
     alias: {

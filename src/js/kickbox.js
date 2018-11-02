@@ -117,9 +117,13 @@ function initMap (options) {
 
   // Promisify the loaded map
   let map = new options.mapboxgl.Map(mapParams);
-  let loadedPromise = new Promise(resolve => {
+  let loadedPromise = new Promise((resolve, reject) => {
     map.on('load', () => {
       resolve(map);
+    });
+
+    map.on('error', err => {
+      reject(err)
     });
   });
 
@@ -321,8 +325,8 @@ function addWmsLayer(map, options) {
     // Map table name to layer name
     layerParams.LABEL_LAYER = options.tableName;
     // Add geometry column(s) to the query parameters
-    layerParams.LABEL_X_ATTR = options.xAttr;
-    layerParams.LABEL_Y_ATTR = options.yAttr;
+    layerParams.LABEL_X_ATTR = options.LABEL_X_ATTR || options.xAttr;
+    layerParams.LABEL_Y_ATTR = options.LABEL_Y_ATTR || options.yAttr;
   } else {
     // Map table name to layer name
     layerParams.layers = options.tableName;

@@ -339,6 +339,7 @@ Enables the identify by radius mode.
 `options.MapboxDraw` | `Object` | Yes | `window.MapboxDraw` | The Mapbox GL Draw object, (often attached to window). *NOTE: Requires separate install from Kinetica Kickbox.js.
 `options.radiusInMeters` | `Number` | Yes | `200` | The radius around the clicked point in meters to use as the search area.
 `options.tableName` | `String` | Yes | `my_table_name` | The table name on which you want to run the identification mode.
+`options.collection` | `String` | No | `my_collection` | An optional collection name to dump the results into.
 `options.kineticaUrl` | `String` | Yes | `http://www.your-kinetica-install.com:9191/wms` | The URL of the Kinetica REST API.
 `options.xAttr` | `String` | Yes (If not using a WKT column) | `x` | The name of the column containing the x values.
 `options.yAttr` | `String` | Yes (If not using a WKT column) | `y` | The name of the column containing the y values.

@@ -109,7 +109,8 @@ IdentifyMode._showPopup = function (state, e) {
       radius: this.radiusInMeters
     },
     tableName: self.tableName,
-    viewName: `${self.tableName}-${uuid()}`
+    viewName: `${self.tableName}-${uuid()}`,
+    collection: self.collection
   }
 
   // Store x/y or wkt column names on the filter for later use

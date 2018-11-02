@@ -80,6 +80,10 @@ function filterRecordsByRadius(kineticaUrl, tableName, filter) {
     filterParams['view_name'] = filter.viewName;
   }
 
+  if (filter.collection) {
+    filterParams.options.collection_name = filter.collection
+  }
+
   // Build endpoint and column references based on table's data
   let endpoint = `${kineticaUrl}/filter/byradius`
   if (filter.xAttr && filter.yAttr && !filter.geoAttr) {
@@ -100,6 +104,10 @@ function filterRecords(kineticaUrl, tableName, filter) {
     'expression': filter.expression,
     'options': {}
   };
+
+  if (filter.collection) {
+    filterParams.options.collection_name = filter.collection
+  }
 
   if (filter.filteredViewName) {
     filterParams['view_name'] = filter.filteredViewName;

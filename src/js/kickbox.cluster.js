@@ -13,6 +13,7 @@ import forEach from 'lodash/forEach';
 import get from 'lodash/get';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
+import remove from 'lodash/remove';
 
 import supercluster from 'supercluster';
 import {featureCollection} from '@turf/helpers';
@@ -28,7 +29,8 @@ const lodash = {
   forEach,
   get,
   minBy,
-  maxBy
+  maxBy,
+  remove
 };
 
 // #endregion Imported Modules
@@ -108,6 +110,8 @@ async function addClusterLayer(map, options) {
     defaults.maxSize,
     defaults.minColor,
     defaults.maxColor);
+
+  updateFn.sourceName = sourceId;
 
   map.on('zoomend', updateFn)
     .on('moveend', updateFn);
@@ -271,6 +275,12 @@ function removeClusterLayer(map, layerId) {
   helper.removeLayer(map, layerId + '-layer');
   helper.removeLayer(map, layerId + '-labels-layer');
   helper.removeSource(map, layerId + '-source');
+  lodash.remove(map._listeners.moveend, (e) => {
+    return e.sourceName === `${layerId}-source`;
+  });
+  lodash.remove(map._listeners.zoomend, (e) => {
+    return e.sourceName === `${layerId}-source`;
+  });
 }
 
 // #endregion Public Functions
