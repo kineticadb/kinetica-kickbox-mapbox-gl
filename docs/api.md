@@ -70,6 +70,7 @@ Updates a WMS layer's parameters with the passed options. Useful for updating WM
 `options` | `Object` | Yes | See below. | A configuration object for the heatmap layer.
 `options.wmsUrl` | `String` | Yes | `http://www.your-kinetica-install.com:9191/wms` | The URL of the Kinetica WMS API.
 `options.layerId` | `String` | Yes | `my-raster-points` | A unique identifier for the layer. Cannot have the same id as any other added layer.
+`options.tableName` | `String` | No | `my_kinetica_table` | In case you want the change source table of this layer.
 `options.renderingOptions` | `Object` | No | `{POINTCOLORS: 'FF0000', POINTSHAPES: 'square', POINTSIZES: 4}` | Rendering options that dictate the styling of the WMS layer. See the [Kinetica WMS Docs](https://www.kinetica.com/docs/feature_overview/wms_feature_overview.html#raster) for all possible examples. Will use Kinetica's defaults if nothing is passed for this parameter.
 
 
