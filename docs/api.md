@@ -23,6 +23,7 @@ Initializes a Mapbox web map.
 `options.kineticaUrl` | `String` | Yes | `http://your-server.com:9191` | The URL of the Kinetica REST API.
 `options.wmsUrl` | `String` | Yes | `http://your-server.com:9191/wms` | The Kinetica WMS API Url, usually ending in :9191/wms.
 `options.center` | `Array<Number>` | No | `[-3.888, 40.432]` | The center point at which the map should initialize.
+`options.mapStyle` | `String` | No | `mapbox://styles/mapbox/dark-v9` | The Mapbox map style.
 `options.zoom` | `Integer` | No | `15` | The Mapbox zoom scale with which to initialize the map.
 `options.username` | `String` | No | `admin` | The basic auth username for the Kinetica REST API.
 `options.password` | `String` | No | `12345` | The basic auth password for the Kinetica REST API.
