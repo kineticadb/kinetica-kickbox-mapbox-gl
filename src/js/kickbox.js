@@ -368,7 +368,8 @@ function addWmsLayer(map, options) {
     // Add a patch for window resizing
     let boundHandler = _readdWmsLayer.bind(this, map, layerParams, options);
     let resizeHandler = lodash.debounce(boundHandler, 500);
-    window.addEventListener('resize', resizeHandler);
+    resizeHandler.sourceName = sourceName;
+    map.on('resize', resizeHandler);
   }
 
   // Return relevant properties for testing
@@ -387,6 +388,9 @@ function removeWmsLayer(map, layerId) {
     return e.sourceName === `${layerId}-source`;
   });
   lodash.remove(map._listeners.zoomend, (e) => {
+    return e.sourceName === `${layerId}-source`;
+  });
+  lodash.remove(map._listeners.resize, e => {
     return e.sourceName === `${layerId}-source`;
   });
 }
