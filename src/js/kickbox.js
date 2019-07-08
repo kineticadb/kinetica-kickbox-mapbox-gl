@@ -420,6 +420,10 @@ function addClusterLayer(map, options) {
  * @param {Object} the layer to re-add
 */
 function _readdWmsLayer(map, layerParams, options) {
+  const opacity = map.getPaintProperty(
+    options.layerId + '-layer',
+    'raster-opacity'
+  );
   helper.removeLayer(map, options.layerId + '-layer');
   helper.removeSource(map, options.layerId + '-source');
 
@@ -428,6 +432,7 @@ function _readdWmsLayer(map, layerParams, options) {
   layerParams.height = dims.height;
   layerParams.width = dims.width;
   helper.bindWmsToSource(map, options.wmsUrl, options.layerId, layerParams, options);
+  setLayerOpacity(map, options.layerId, opacity);
 }
 
 /**
