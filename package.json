@@ -62,7 +62,7 @@
     "@turf/circle": "^6.0.0",
     "@turf/helpers": "^6.0.1",
     "@turf/length": "^6.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "handlebars": "^4.0.11",
     "lodash": "^4.17.5",
     "spin.js": "^3.1.0",
